@@ -7,10 +7,11 @@ src = "src"
 
 [build]
 build-dir = "book"
+create-missing = false
 
 [output.html]
 site-url = "/flauth/"
-git-repo-url = "https://github.com/jiacai2050/flauth"
+git-repository-url = "https://github.com/jiacai2050/flauth"
 edit-url-template = "https://github.com/jiacai2050/flauth/edit/main/docs/{path}"
 
 [output.html.search]
