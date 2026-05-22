@@ -16,6 +16,8 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  static final navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     const snackBarTheme = SnackBarThemeData(
@@ -36,6 +38,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Flauth',
+        navigatorKey: navigatorKey,
         // debugShowCheckedModeBanner: false,
         // Define a consistent theme for the app, supporting both light and dark modes.
         theme: ThemeData(
@@ -71,28 +74,40 @@ class AuthWrapper extends StatefulWidget {
 }
 
 class _AuthWrapperState extends State<AuthWrapper> with WidgetsBindingObserver {
+  late final AuthProvider _auth;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _auth = Provider.of<AuthProvider>(context, listen: false);
+    _auth.addListener(_onAuthChanged);
   }
 
   @override
   void dispose() {
+    _auth.removeListener(_onAuthChanged);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
+  void _onAuthChanged() {
+    if (_auth.status == AuthStatus.unauthenticated) {
+      final navigator = MyApp.navigatorKey.currentState;
+      if (navigator != null && navigator.canPop()) {
+        navigator.popUntil((route) => route.isFirst);
+      }
+    }
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    final auth = Provider.of<AuthProvider>(context, listen: false);
-
     if (state == AppLifecycleState.paused) {
       // App entered background: record timestamp
-      auth.markBackground();
+      _auth.markBackground();
     } else if (state == AppLifecycleState.resumed) {
       // App came to foreground: check if we should lock
-      auth.checkLock(timeoutSeconds: 30); // 30 seconds grace period
+      _auth.checkLock(timeoutSeconds: 30); // 30 seconds grace period
     }
   }
 
