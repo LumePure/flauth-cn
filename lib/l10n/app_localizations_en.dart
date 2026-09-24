@@ -425,6 +425,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tapToAddAccount => 'Tap + to add an account';
+
   @override
   String get codeCopied => 'Code copied to clipboard';
 

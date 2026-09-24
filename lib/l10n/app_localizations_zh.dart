@@ -415,6 +415,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get tapToAddAccount => '点击 + 添加账户';
+
   @override
   String get codeCopied => '验证码已复制到剪贴板';
 
