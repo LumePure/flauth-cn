@@ -4,19 +4,25 @@ import 'package:flauth/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'providers/account_provider.dart';
 import 'providers/auth_provider.dart';
+import 'providers/locale_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/auth_screen.dart';
+import 'services/storage_service.dart';
 
-void main() {
+Future<void> main() async {
   debugPrint('=== APP STARTED ===');
   // Required because we use plugins (like secure_storage) before runApp might finish initializing bindings.
   // It ensures the Flutter engine and native channels are ready.
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  final localeProvider = LocaleProvider(StorageService());
+  await localeProvider.load();
+  runApp(MyApp(localeProvider: localeProvider));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.localeProvider});
+
+  final LocaleProvider localeProvider;
 
   static final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -37,39 +43,44 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AccountProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider.value(value: localeProvider),
       ],
-      child: MaterialApp(
-        title: 'Flauth',
-        navigatorKey: navigatorKey,
-        // debugShowCheckedModeBanner: false,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: AppLocalizations.supportedLocales,
-        // Define a consistent theme for the app, supporting both light and dark modes.
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.blue,
-            brightness: Brightness.light,
+      child: Consumer<LocaleProvider>(
+        builder: (context, appLocale, child) => MaterialApp(
+          title: 'Flauth',
+          locale: appLocale.locale,
+          navigatorKey: navigatorKey,
+          // debugShowCheckedModeBanner: false,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          // Define a consistent theme for the app, supporting both light and dark modes.
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.blue,
+              brightness: Brightness.light,
+            ),
+            useMaterial3: true,
+            snackBarTheme: snackBarTheme,
+            pageTransitionsTheme: pageTransitionsTheme,
           ),
-          useMaterial3: true,
-          snackBarTheme: snackBarTheme,
-          pageTransitionsTheme: pageTransitionsTheme,
-        ),
-        darkTheme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.blue,
-            brightness: Brightness.dark,
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.blue,
+              brightness: Brightness.dark,
+            ),
+            useMaterial3: true,
+            snackBarTheme: snackBarTheme,
+            pageTransitionsTheme: pageTransitionsTheme,
           ),
-          useMaterial3: true,
-          snackBarTheme: snackBarTheme,
-          pageTransitionsTheme: pageTransitionsTheme,
+          themeMode: ThemeMode.system,
+          home: child,
         ),
-        themeMode: ThemeMode.system,
-        home: const AuthWrapper(),
+        child: const AuthWrapper(),
       ),
     );
   }

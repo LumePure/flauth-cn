@@ -4,6 +4,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import '../providers/locale_provider.dart';
 import 'security_screen.dart';
 import 'import_export_screen.dart';
 import 'webdav_config_screen.dart';
@@ -33,11 +34,23 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final auth = Provider.of<AuthProvider>(context);
+    final locale = Provider.of<LocaleProvider>(context);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settings)),
       body: ListView(
         children: [
+          _SectionHeader(title: l10n.general),
+          ListTile(
+            leading: const Icon(Icons.language),
+            title: Text(l10n.language),
+            subtitle: Text(_languageLabel(l10n, locale.locale)),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _showLanguagePicker(context, l10n, locale),
+          ),
+
+          const Divider(),
+
           _SectionHeader(title: l10n.security),
           ListTile(
             leading: const Icon(Icons.security_outlined),
@@ -160,6 +173,48 @@ class SettingsScreen extends StatelessWidget {
           const SizedBox(height: 24),
         ],
       ),
+    );
+  }
+
+  String _languageLabel(AppLocalizations l10n, Locale? locale) {
+    if (locale == null) return l10n.languageSystem;
+    return locale.languageCode == 'zh'
+        ? l10n.languageChinese
+        : l10n.languageEnglish;
+  }
+
+  void _showLanguagePicker(
+    BuildContext context,
+    AppLocalizations l10n,
+    LocaleProvider provider,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      builder: (sheetContext) {
+        Widget option(String title, Locale? value) {
+          final isSelected =
+              value?.languageCode == provider.locale?.languageCode;
+          return ListTile(
+            title: Text(title),
+            trailing: isSelected ? const Icon(Icons.check) : null,
+            onTap: () {
+              Navigator.of(sheetContext).pop();
+              provider.select(value);
+            },
+          );
+        }
+
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              option(l10n.languageSystem, null),
+              option(l10n.languageChinese, const Locale('zh')),
+              option(l10n.languageEnglish, const Locale('en')),
+            ],
+          ),
+        );
+      },
     );
   }
 }
