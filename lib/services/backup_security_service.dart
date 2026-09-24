@@ -4,6 +4,18 @@ import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart';
 import 'package:pointycastle/export.dart' as pc;
 
+/// Thrown when a backup payload cannot be decrypted with the given password.
+class BackupPasswordException implements Exception {
+  const BackupPasswordException([
+    this.message = 'Decryption failed: invalid password or corrupted file.',
+  ]);
+
+  final String message;
+
+  @override
+  String toString() => message;
+}
+
 /// Provides encryption and decryption services for secure backups.
 /// Uses AES-256-CBC with PBKDF2 (HMAC-SHA256) key derivation.
 class BackupSecurityService {
@@ -84,7 +96,7 @@ class BackupSecurityService {
       }
       // For all other failures, surface a user-friendly message for likely
       // invalid password or corrupted ciphertext.
-      throw Exception('Decryption failed: Invalid password or corrupted file.');
+      throw const BackupPasswordException();
     }
   }
 

@@ -3,19 +3,25 @@ import 'package:flauth/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../providers/account_provider.dart';
 
-class AddAccountScreen extends StatefulWidget {
-  const AddAccountScreen({super.key});
-
-  @override
-  State<AddAccountScreen> createState() => _AddAccountScreenState();
+bool isValidBase32(String input) {
+  final cleaned = input.replaceAll(' ', '').toUpperCase();
+  if (cleaned.isEmpty) return false;
+  return RegExp(r'^[A-Z2-7]+=*$').hasMatch(cleaned);
 }
 
-class _AddAccountScreenState extends State<AddAccountScreen> {
+class ManualEntryScreen extends StatefulWidget {
+  const ManualEntryScreen({super.key});
+
+  @override
+  State<ManualEntryScreen> createState() => _ManualEntryScreenState();
+}
+
+class _ManualEntryScreenState extends State<ManualEntryScreen> {
   final _formKey = GlobalKey<FormState>();
   final _issuerController = TextEditingController();
   final _nameController = TextEditingController();
   final _secretController = TextEditingController();
-  bool _isProcessing = false;
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
@@ -25,52 +31,35 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
     super.dispose();
   }
 
-  bool _isValidBase32(String input) {
-    final cleaned = input.replaceAll(' ', '').toUpperCase();
-    if (cleaned.isEmpty) return false;
-    final regex = RegExp(r'^[A-Z2-7]+=*$');
-    if (!regex.hasMatch(cleaned)) return false;
-    return cleaned.length % 8 == 0 || cleaned.contains('=');
-  }
-
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _isProcessing = true);
-
-    final l10n = AppLocalizations.of(context)!;
-    final provider = Provider.of<AccountProvider>(context, listen: false);
+    setState(() => _isSubmitting = true);
 
     final issuer = _issuerController.text.trim();
     final name = _nameController.text.trim();
-    final secret = _secretController.text
-        .trim()
-        .replaceAll(' ', '')
-        .toUpperCase();
+    final secret = _secretController.text.replaceAll(' ', '').toUpperCase();
 
-    final success = await provider.addAccount(
-      name.isNotEmpty ? name : issuer,
-      secret,
-      issuer: issuer,
-    );
+    final success = await Provider.of<AccountProvider>(
+      context,
+      listen: false,
+    ).addAccount(name, secret, issuer: issuer);
 
     if (!mounted) return;
 
-    setState(() => _isProcessing = false);
+    setState(() => _isSubmitting = false);
 
+    final l10n = AppLocalizations.of(context)!;
+    final label = issuer.isNotEmpty ? issuer : name;
     if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(l10n.addedAccount(issuer.isNotEmpty ? issuer : name)),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.addedAccount(label))));
       Navigator.of(context).pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            l10n.accountAlreadyExists(issuer.isNotEmpty ? issuer : name),
-          ),
+          content: Text(l10n.accountAlreadyExists(label)),
           backgroundColor: Colors.orange,
         ),
       );
@@ -80,11 +69,10 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.addManually)),
+      appBar: AppBar(title: Text(l10n.addAccount)),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: Column(
@@ -93,62 +81,61 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
               TextFormField(
                 controller: _issuerController,
                 decoration: InputDecoration(
-                  labelText: l10n.issuerLabel,
+                  labelText: l10n.issuerOptionalLabel,
                   hintText: l10n.issuerHint,
-                  border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.business),
                 ),
-                textCapitalization: TextCapitalization.words,
+                textInputAction: TextInputAction.next,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
                   labelText: l10n.accountName,
                   hintText: l10n.accountNameHint,
-                  border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.person),
                 ),
-                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return l10n.accountNameRequired;
+                  }
+                  return null;
+                },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _secretController,
                 decoration: InputDecoration(
                   labelText: l10n.secretKey,
                   hintText: l10n.secretKeyHint,
-                  border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.key),
                 ),
-                validator: (val) {
-                  if (val == null || val.trim().isEmpty) {
+                textInputAction: TextInputAction.done,
+                textCapitalization: TextCapitalization.characters,
+                autocorrect: false,
+                enableSuggestions: false,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
                     return l10n.secretKeyRequired;
                   }
-                  if (!_isValidBase32(val.trim())) {
+                  if (!isValidBase32(value)) {
                     return l10n.invalidSecretKey;
                   }
                   return null;
                 },
-                textCapitalization: TextCapitalization.characters,
-                style: const TextStyle(
-                  fontFamily: 'monospace',
-                  letterSpacing: 1.5,
-                ),
+                onFieldSubmitted: (_) => _submit(),
               ),
-              const SizedBox(height: 36),
-              FilledButton.icon(
-                onPressed: _isProcessing ? null : _submit,
-                icon: _isProcessing
+              const SizedBox(height: 24),
+              FilledButton(
+                onPressed: _isSubmitting ? null : _submit,
+                child: _isSubmitting
                     ? const SizedBox(
-                        width: 20,
                         height: 20,
+                        width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Icon(Icons.add),
-                label: Text(l10n.add),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
+                    : Text(l10n.addAccount),
               ),
             ],
           ),

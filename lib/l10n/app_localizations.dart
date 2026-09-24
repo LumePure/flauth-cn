@@ -835,6 +835,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap + to add an account'**
   String get tapToAddAccount;
+
+  /// No description provided for @codeCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Code copied to clipboard'**
+  String get codeCopied;
+
+  /// No description provided for @invalidOtpauthScheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid otpauth URI: unsupported scheme'**
+  String get invalidOtpauthScheme;
+
+  /// No description provided for @uriMissingSecret.
+  ///
+  /// In en, this message translates to:
+  /// **'No secret found in the QR code'**
+  String get uriMissingSecret;
+
+  /// No description provided for @serverRespondedWithStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Server responded with status {statusCode}'**
+  String serverRespondedWithStatus(int statusCode);
+
+  /// No description provided for @invalidBackupFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid backup format'**
+  String get invalidBackupFormat;
+
+  /// No description provided for @decryptFailedInvalidPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong password or corrupted backup file'**
+  String get decryptFailedInvalidPassword;
+
+  /// No description provided for @issuerOptionalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Issuer (optional)'**
+  String get issuerOptionalLabel;
+
+  /// No description provided for @accountNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Account name is required'**
+  String get accountNameRequired;
+
+  /// No description provided for @general.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get general;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @languageSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow system'**
+  String get languageSystem;
+
+  /// No description provided for @languageChinese.
+  ///
+  /// In en, this message translates to:
+  /// **'简体中文'**
+  String get languageChinese;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
 }
 
 class _AppLocalizationsDelegate

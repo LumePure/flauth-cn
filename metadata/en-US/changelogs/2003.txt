@@ -1,0 +1,15 @@
+* Improved lock screen reliability
+
+  When authentication expires or the user becomes unauthenticated, Flauth now returns to the lock screen even if another page was open.
+
+* Copy visible TOTP codes with a long press
+
+  When a code is visible, long-press the account tile to copy it quickly without opening any extra menus.
+
+* Improved Android predictive back behavior
+
+  Back navigation now follows Android's predictive back expectations for a smoother app experience.
+
+* Improved in-app message visibility
+
+  Success and error messages are now easier to read and no longer cover important bottom controls.

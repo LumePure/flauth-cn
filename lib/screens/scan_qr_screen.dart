@@ -122,6 +122,15 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
           Navigator.of(context).pop();
         }
       }
+    } on FormatException catch (e) {
+      final l10n = AppLocalizations.of(context)!;
+      if (e.message == Account.invalidSchemeError) {
+        _showError(l10n.invalidOtpauthScheme);
+      } else if (e.message == Account.missingSecretError) {
+        _showError(l10n.uriMissingSecret);
+      } else {
+        _showError(l10n.failedToAddAccount(e.message));
+      }
     } catch (e) {
       final l10n = AppLocalizations.of(context)!;
       _showError(l10n.failedToAddAccount(e.toString()));

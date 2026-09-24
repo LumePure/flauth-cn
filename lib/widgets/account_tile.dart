@@ -93,6 +93,18 @@ class _AccountTileState extends State<AccountTile> {
               );
             }
           },
+          onLongPress: _isCodeVisible
+              ? () {
+                  Clipboard.setData(ClipboardData(text: code));
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(l10n.codeCopied),
+                      duration: const Duration(seconds: 1),
+                    ),
+                  );
+                }
+              : null,
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 16.0,
@@ -142,7 +154,9 @@ class _AccountTileState extends State<AccountTile> {
                                   ?.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: _isCodeVisible
-                                        ? Colors.grey[600]
+                                        ? Theme.of(
+                                            context,
+                                          ).colorScheme.onSurfaceVariant
                                         : null,
                                   ),
                               overflow: TextOverflow.ellipsis,
@@ -164,7 +178,11 @@ class _AccountTileState extends State<AccountTile> {
                             child: Text(
                               widget.account.name,
                               style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(color: Colors.grey[600]),
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
+                                  ),
                             ),
                           ),
                         const SizedBox(height: 12),

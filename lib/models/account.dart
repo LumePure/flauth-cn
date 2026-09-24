@@ -52,12 +52,18 @@ class Account {
     return uri.toString();
   }
 
+  /// Message of the [FormatException] thrown for a non-otpauth URI.
+  static const String invalidSchemeError = 'Invalid scheme or host';
+
+  /// Message of the [FormatException] thrown when the URI carries no secret.
+  static const String missingSecretError = 'No secret found in URI';
+
   /// Creates an Account from a standard otpauth URI.
   /// Generates a new random ID.
   /// Throws FormatException if URI is invalid.
   factory Account.fromUri(Uri uri) {
     if (uri.scheme != 'otpauth' || uri.host != 'totp') {
-      throw const FormatException('Invalid scheme or host');
+      throw const FormatException(invalidSchemeError);
     }
 
     final String path = Uri.decodeComponent(uri.path);
@@ -80,7 +86,7 @@ class Account {
     }
 
     if (secret == null || secret.isEmpty) {
-      throw const FormatException('No secret found in URI');
+      throw const FormatException(missingSecretError);
     }
 
     return Account(

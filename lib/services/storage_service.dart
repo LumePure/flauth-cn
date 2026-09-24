@@ -17,6 +17,7 @@ class StorageService {
   static const _keyAccountOrder = 'auth_account_order';
   static const _keyUsePinForBackup = 'auth_use_pin_for_backup';
   static const _keyLastWebDavSyncTime = 'auth_last_webdav_sync_time';
+  static const _keyLocale = 'app_locale';
   static const _accountPrefix = 'account_';
 
   /// Retrieves the list of accounts from secure storage.
@@ -184,6 +185,17 @@ class StorageService {
       return Map<String, String>.from(json.decode(jsonStr));
     } catch (e) {
       return null;
+    }
+  }
+
+  /// The language the user pinned for the app, or `null` to follow the system.
+  Future<String?> getLocale() async => _storage.read(key: _keyLocale);
+
+  Future<void> saveLocale(String? languageCode) async {
+    if (languageCode == null) {
+      await _storage.delete(key: _keyLocale);
+    } else {
+      await _storage.write(key: _keyLocale, value: languageCode);
     }
   }
 

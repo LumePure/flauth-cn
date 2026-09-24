@@ -6,22 +6,20 @@
 <img src="assets/app_icon.svg" alt="Flauth Logo" width="100"/>
 </div>
 
-> Flauth 是一款隐私优先、完全开源的 TOTP 身份验证器，支持 Android、macOS、Windows 和 Linux。
+> Flauth 是一款隐私优先、完全开源的 TOTP 身份验证器，支持 GUI 应用（Android、macOS、Windows、Linux）和轻量级命令行工具，可直接在终端中查看令牌。
 
 **[在线文档与工具](https://jiacai2050.github.io/flauth/)**
-
-它为管理您的 2FA（双重身份验证）令牌提供了一个简洁轻量的解决方案。
 
 ## 🌟 为什么选择 Flauth？
 
 - **完全开源**：代码透明可靠，您的密钥永远不会离开您的设备（除非您选择云同步）。
 - **灵活的备份方案**：
-  - **安全逻辑**：详细的[备份与恢复机制](./docs/backup_zh.md)。
+  - **安全逻辑**：详细的[备份与恢复机制](https://jiacai2050.github.io/flauth/backup)。
   - **本地备份**：支持通过系统文件选择器将账号导出为标准的文本文件，或从本地文件导入。
   - **WebDAV 同步**：支持与您的私有云（如 Nextcloud、坚果云等）进行一键同步，支持自定义远程路径，简洁高效。
 - **隐私与安全**：
-  - **安全架构**：详细的[安全实现细节与认证策略](./docs/auth_zh.md)。
-  - **性能设计**：详细的[高频 UI 更新优化方案](./docs/perf_zh.md)。
+  - **安全架构**：详细的[安全实现细节与认证策略](https://jiacai2050.github.io/flauth/auth)。
+  - **性能设计**：详细的[高频 UI 更新优化方案](https://jiacai2050.github.io/flauth/perf)。
   - **加密存储**：密钥使用平台原生安全机制（iOS/macOS 的 Keychain，Android 的 Keystore）进行加密存储。
   - **颗粒化存储**：采用“一号一密 (One Key Per Account)”架构，提升数据读写性能与可靠性。
 - **现代 UI**：极简设计，基于 Material 3，完美支持深色和浅色模式。
@@ -38,8 +36,8 @@
 
 得益于对标准 `otpauth://` URI 的支持，迁移到 Flauth 非常简单：
 
-- **[从 Aegis 导入](./docs/import_aegis_zh.md)**：分步指南，教您如何从 Aegis Authenticator 迁移所有账号。
-- **手动迁移**：对于其他应用，请将其账号导出为**纯文本格式的 `otpauth://` URI 列表**（每行一个）。将该文件保存为 `.flauth` 后缀，然后使用“本地文件”导入功能。如果您只有密钥，可以使用我们的 **[TOTP URI 生成器](https://jiacai2050.github.io/flauth/tools/uri-generator/)** 来生成二维码或 URI 列表。
+- **[从 Aegis 导入](https://jiacai2050.github.io/flauth/import_aegis)**：分步指南，教您如何从 Aegis Authenticator 迁移所有账号。
+- **手动迁移**：对于其他应用，请将其账号导出为**纯文本格式的 `otpauth://` URI 列表**（每行一个）。将该文件保存为 `.flauth` 后缀，然后使用“本地文件”导入功能。如果您只有密钥，可以使用我们的 **[TOTP URI 生成器](https://jiacai2050.github.io/flauth/tools/uri-generator)** 来生成二维码或 URI 列表。
   ```text
   otpauth://totp/GitHub:user?secret=ABC...&issuer=GitHub
   otpauth://totp/Google:user@gmail.com?secret=XYZ...&issuer=Google
@@ -60,6 +58,41 @@
 
 ### ⚡️ 中国用户下载加速
 如果您在从 GitHub 下载时遇到速度较慢的问题，可以使用 [gh-proxy](https://gh-proxy.com/) 等代理服务来加速下载。
+
+## ⌨️ 命令行工具
+
+Flauth 同时提供命令行工具 `flauth-cli`，无需 GUI 即可在终端中查看 TOTP 令牌。
+
+预编译的 Linux、macOS、Windows 二进制文件可在 [GitHub Releases](https://github.com/jiacai2050/flauth/releases) 页面下载。
+
+### 快速安装
+
+```bash
+curl -fsSL https://jiacai2050.github.io/flauth/install.sh | sh
+```
+
+中国用户加速：
+```bash
+curl -fsSL https://jiacai2050.github.io/flauth/install.sh | sh -s -- --china
+```
+
+运行 `install.sh --help` 查看更多选项（如 `--version`、`--prefix`）。
+
+### 使用方法
+
+```bash
+# 设置备份文件路径
+export FLAUTH_BACKUP_FILE=/path/to/backup.flauth
+
+# 显示所有令牌
+flauth-cli
+
+# 按关键词过滤
+flauth-cli github
+
+# 查看帮助
+flauth-cli --help
+```
 
 ## 🛠️ 开发指南
 
@@ -106,7 +139,7 @@ flutter test           # 运行单元测试
 ```
 
 ### 🔑 Android 签名配置
-关于如何为生产版本配置应用签名，请参阅 [Android 签名指南](docs/android-sign_zh.md)。
+关于如何为生产版本配置应用签名，请参阅 [Android 签名指南](https://jiacai2050.github.io/flauth/android-sign)。
 
 ## 🏗️ 平台适配说明
 

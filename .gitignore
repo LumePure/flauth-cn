@@ -23,6 +23,9 @@ migrate_working_dir/
 # is commented out by default.
 #.vscode/
 
+# mdBook build output
+docs/book/
+
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id
@@ -45,3 +48,5 @@ app.*.map.json
 /android/app/release
 /android/key.properties
 gh_2.62.0_linux_amd64/
+
+/.kiro

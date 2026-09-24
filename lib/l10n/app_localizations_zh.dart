@@ -415,4 +415,44 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get tapToAddAccount => '点击 + 添加账户';
+  @override
+  String get codeCopied => '验证码已复制到剪贴板';
+
+  @override
+  String get invalidOtpauthScheme => '无效的 otpauth 链接：协议不受支持';
+
+  @override
+  String get uriMissingSecret => '二维码中未包含密钥';
+
+  @override
+  String serverRespondedWithStatus(int statusCode) {
+    return '服务器返回状态码 $statusCode';
+  }
+
+  @override
+  String get invalidBackupFormat => '备份文件格式无效';
+
+  @override
+  String get decryptFailedInvalidPassword => '密码错误或备份文件已损坏';
+
+  @override
+  String get issuerOptionalLabel => '服务名称（可选）';
+
+  @override
+  String get accountNameRequired => '账户名不能为空';
+
+  @override
+  String get general => '通用';
+
+  @override
+  String get language => '语言';
+
+  @override
+  String get languageSystem => '跟随系统';
+
+  @override
+  String get languageChinese => '简体中文';
+
+  @override
+  String get languageEnglish => 'English';
 }

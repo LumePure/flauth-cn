@@ -184,13 +184,17 @@ class _ImportExportScreenState extends State<ImportExportScreen>
         // Cancelled
         return null;
       }
+      final l10n = AppLocalizations.of(context)!;
       try {
         return BackupSecurityService.decrypt(content, password);
+      } on BackupPasswordException {
+        _showSnackBar(l10n.decryptFailedInvalidPassword, isError: true);
+        return null;
+      } on FormatException {
+        _showSnackBar(l10n.invalidBackupFormat, isError: true);
+        return null;
       } catch (e) {
-        _showSnackBar(
-          AppLocalizations.of(context)!.decryptionFailed(e.toString()),
-          isError: true,
-        );
+        _showSnackBar(l10n.decryptionFailed(e.toString()), isError: true);
         return null;
       }
     }
@@ -305,7 +309,7 @@ class _ImportExportScreenState extends State<ImportExportScreen>
   Future<Map<String, String>?> _getWebDavConfig() async {
     final provider = Provider.of<AccountProvider>(context, listen: false);
     final config = await provider.getWebDavConfig();
-    if (config == null || config['url'] == null) {
+    if (config == null || (config['url']?.isEmpty ?? true)) {
       _showSnackBar(AppLocalizations.of(context)!.pleaseConfigureWebdav);
       _openWebDavConfig();
       return null;
@@ -580,7 +584,6 @@ class _ImportExportScreenState extends State<ImportExportScreen>
             ),
 
             const SizedBox(height: 16),
-
             OutlinedButton.icon(
               onPressed: btn2Action,
               icon: Icon(btn2Icon),

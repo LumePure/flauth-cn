@@ -86,7 +86,18 @@ class _WebDavConfigScreenState extends State<WebDavConfigScreen> {
           Navigator.of(context).pop();
         }
       } else {
-        throw Exception('Server responded with status ${response.statusCode}');
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(
+                context,
+              )!.serverRespondedWithStatus(response.statusCode),
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
       }
     } catch (e) {
       if (mounted) {
