@@ -425,4 +425,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tapToAddAccount => 'Tap + to add an account';
+  @override
+  String get codeCopied => 'Code copied to clipboard';
+
+  @override
+  String get invalidOtpauthScheme => 'Invalid otpauth URI: unsupported scheme';
+
+  @override
+  String get uriMissingSecret => 'No secret found in the QR code';
+
+  @override
+  String serverRespondedWithStatus(int statusCode) {
+    return 'Server responded with status $statusCode';
+  }
+
+  @override
+  String get invalidBackupFormat => 'Invalid backup format';
+
+  @override
+  String get decryptFailedInvalidPassword =>
+      'Wrong password or corrupted backup file';
+
+  @override
+  String get issuerOptionalLabel => 'Issuer (optional)';
+
+  @override
+  String get accountNameRequired => 'Account name is required';
+
+  @override
+  String get general => 'General';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get languageSystem => 'Follow system';
+
+  @override
+  String get languageChinese => '简体中文';
+
+  @override
+  String get languageEnglish => 'English';
 }

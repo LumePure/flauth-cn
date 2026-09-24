@@ -231,5 +231,28 @@
   "secretKeyRequired": "Secret key is required",
   "invalidSecretKey": "Invalid Base32 secret key",
   "add": "Add",
-  "tapToAddAccount": "Tap + to add an account"
+  "tapToAddAccount": "Tap + to add an account",
+  "codeCopied": "Code copied to clipboard",
+
+  "invalidOtpauthScheme": "Invalid otpauth URI: unsupported scheme",
+  "uriMissingSecret": "No secret found in the QR code",
+
+  "serverRespondedWithStatus": "Server responded with status {statusCode}",
+  "@serverRespondedWithStatus": {
+    "placeholders": {
+      "statusCode": { "type": "int" }
+    }
+  },
+
+  "invalidBackupFormat": "Invalid backup format",
+  "decryptFailedInvalidPassword": "Wrong password or corrupted backup file",
+
+  "issuerOptionalLabel": "Issuer (optional)",
+  "accountNameRequired": "Account name is required",
+
+  "general": "General",
+  "language": "Language",
+  "languageSystem": "Follow system",
+  "languageChinese": "简体中文",
+  "languageEnglish": "English"
 }

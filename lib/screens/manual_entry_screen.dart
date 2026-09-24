@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flauth/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../providers/account_provider.dart';
 
@@ -37,7 +38,7 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
 
     final issuer = _issuerController.text.trim();
     final name = _nameController.text.trim();
-    final secret = _secretController.text.trim();
+    final secret = _secretController.text.replaceAll(' ', '').toUpperCase();
 
     final success = await Provider.of<AccountProvider>(
       context,
@@ -48,15 +49,17 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
 
     setState(() => _isSubmitting = false);
 
+    final l10n = AppLocalizations.of(context)!;
+    final label = issuer.isNotEmpty ? issuer : name;
     if (success) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Added account: $name')));
+      ).showSnackBar(SnackBar(content: Text(l10n.addedAccount(label))));
       Navigator.of(context).pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Account already exists'),
+        SnackBar(
+          content: Text(l10n.accountAlreadyExists(label)),
           backgroundColor: Colors.orange,
         ),
       );
@@ -65,8 +68,9 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Account')),
+      appBar: AppBar(title: Text(l10n.addAccount)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -76,25 +80,25 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
             children: [
               TextFormField(
                 controller: _issuerController,
-                decoration: const InputDecoration(
-                  labelText: 'Issuer (optional)',
-                  hintText: 'e.g. Google, GitHub',
-                  prefixIcon: Icon(Icons.business),
+                decoration: InputDecoration(
+                  labelText: l10n.issuerOptionalLabel,
+                  hintText: l10n.issuerHint,
+                  prefixIcon: const Icon(Icons.business),
                 ),
                 textInputAction: TextInputAction.next,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Account Name',
-                  hintText: 'e.g. user@example.com',
-                  prefixIcon: Icon(Icons.person),
+                decoration: InputDecoration(
+                  labelText: l10n.accountName,
+                  hintText: l10n.accountNameHint,
+                  prefixIcon: const Icon(Icons.person),
                 ),
                 textInputAction: TextInputAction.next,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Account name is required';
+                    return l10n.accountNameRequired;
                   }
                   return null;
                 },
@@ -102,10 +106,10 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _secretController,
-                decoration: const InputDecoration(
-                  labelText: 'Secret Key',
-                  hintText: 'e.g. JBSWY3DPEHPK3PXP',
-                  prefixIcon: Icon(Icons.key),
+                decoration: InputDecoration(
+                  labelText: l10n.secretKey,
+                  hintText: l10n.secretKeyHint,
+                  prefixIcon: const Icon(Icons.key),
                 ),
                 textInputAction: TextInputAction.done,
                 textCapitalization: TextCapitalization.characters,
@@ -113,10 +117,10 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
                 enableSuggestions: false,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Secret key is required';
+                    return l10n.secretKeyRequired;
                   }
                   if (!isValidBase32(value)) {
-                    return 'Invalid secret key (must be Base32)';
+                    return l10n.invalidSecretKey;
                   }
                   return null;
                 },
@@ -131,7 +135,7 @@ class _ManualEntryScreenState extends State<ManualEntryScreen> {
                         width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Add Account'),
+                    : Text(l10n.addAccount),
               ),
             ],
           ),

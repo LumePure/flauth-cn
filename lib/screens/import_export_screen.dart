@@ -184,13 +184,17 @@ class _ImportExportScreenState extends State<ImportExportScreen>
         // Cancelled
         return null;
       }
+      final l10n = AppLocalizations.of(context)!;
       try {
         return BackupSecurityService.decrypt(content, password);
+      } on BackupPasswordException {
+        _showSnackBar(l10n.decryptFailedInvalidPassword, isError: true);
+        return null;
+      } on FormatException {
+        _showSnackBar(l10n.invalidBackupFormat, isError: true);
+        return null;
       } catch (e) {
-        _showSnackBar(
-          AppLocalizations.of(context)!.decryptionFailed(e.toString()),
-          isError: true,
-        );
+        _showSnackBar(l10n.decryptionFailed(e.toString()), isError: true);
         return null;
       }
     }
