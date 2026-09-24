@@ -4,13 +4,9 @@
 <img src="https://raw.githubusercontent.com/jiacai2050/flauth/main/assets/app_icon.svg" alt="Flauth Logo" width="100"/>
 </div>
 
-> **Flauth** is a privacy-first, fully open-source TOTP authenticator for Android, macOS, Windows, and Linux.
+> **Flauth** is a privacy-first, fully open-source TOTP authenticator. It offers both a GUI app (Android, macOS, Windows, Linux) and a lightweight CLI for viewing tokens directly in your terminal.
 
-It provides a simple and lightweight solution for managing your 2FA (Two-Factor Authentication) tokens.
-
-[:material-download: Download Latest Release](https://github.com/jiacai2050/flauth/releases){ .md-button .md-button--primary }
-[:simple-fdroid: F-Droid](https://f-droid.org/en/packages/net.liujiacai.flauth/){ .md-button }
-[:material-github: View on GitHub](https://github.com/jiacai2050/flauth){ .md-button }
+[Download Latest Release](https://github.com/jiacai2050/flauth/releases) | [F-Droid](https://f-droid.org/en/packages/net.liujiacai.flauth/) | [GitHub](https://github.com/jiacai2050/flauth)
 
 ---
 
@@ -40,6 +36,41 @@ You can download Flauth from the following sources:
 
 - **[F-Droid](https://f-droid.org/en/packages/net.liujiacai.flauth/)**: The privacy-respecting FOSS Android app store.
 - **[GitHub Releases](https://github.com/jiacai2050/flauth/releases)**: Pre-compiled binaries for all supported platforms (Android APK, macOS, Linux, and Windows).
+
+## ⌨️ CLI
+
+For a lightweight experience, Flauth also provides a command-line tool to view TOTP tokens directly in your terminal — no GUI needed.
+
+Pre-compiled binaries for Linux, macOS, and Windows are available on the [GitHub Releases](https://github.com/jiacai2050/flauth/releases) page.
+
+### Quick Install
+
+```bash
+curl -fsSL https://jiacai2050.github.io/flauth/install.sh | sh
+```
+
+For users in China:
+```bash
+curl -fsSL https://jiacai2050.github.io/flauth/install.sh | sh -s -- --china
+```
+
+Run `install.sh --help` for more options (e.g. `--version`, `--prefix`).
+
+### Usage
+
+```bash
+# Set the backup file path
+export FLAUTH_BACKUP_FILE=/path/to/backup.flauth
+
+# Show all tokens
+flauth-cli
+
+# Filter by keyword
+flauth-cli github
+
+# Show help
+flauth-cli --help
+```
 
 ## 🛡️ Permissions
 

@@ -1,10 +1,10 @@
 
 
 fmt:
-	dart format --set-exit-if-changed lib
+	dart format --set-exit-if-changed lib test cli
 
 fix:
-	dart format lib
+	dart format lib test cli
 
 lint:
 	flutter analyze
@@ -20,9 +20,16 @@ perf:
 	flutter run --profile -d mac
 
 serve:
-	mkdocs serve
+	cd docs && mdbook serve
 
 build-docs:
-	mkdocs build --site-dir build/website
+	cd docs && mdbook build
 
-.PHONY: fmt lint test fix gen perf serve build-docs
+build-cli:
+	mkdir -p build
+	dart compile exe cli/main.dart -o build/flauth-cli
+
+run:
+	flutter run
+
+.PHONY: fmt lint test fix gen perf serve build-docs build-cli run

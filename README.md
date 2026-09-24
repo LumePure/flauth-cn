@@ -6,22 +6,20 @@
 <img src="assets/app_icon.svg" alt="Flauth Logo" width="100"/>
 </div>
 
-> Flauth is a privacy-first, fully open-source TOTP authenticator for Android, macOS, Windows, and Linux.
+> Flauth is a privacy-first, fully open-source TOTP authenticator. It offers both a GUI app (Android, macOS, Windows, Linux) and a lightweight CLI for viewing tokens directly in your terminal.
 
 **[Documentation & Tools](https://jiacai2050.github.io/flauth/)**
-
-It provides a simple and lightweight solution for managing your 2FA (Two-Factor Authentication) tokens.
 
 ## 🌟 Why Flauth?
 
 - **100% Open Source**: Transparent and trustable code. Your secrets never leave your device unless you choose to sync them.
 - **Flexible Backups**:
-  - **Security Logic**: Detailed [backup and restore mechanisms](./docs/backup.md).
+  - **Security Logic**: Detailed [backup and restore mechanisms](https://jiacai2050.github.io/flauth/backup).
   - **Local Backup**: Export/Import accounts as standard text files using system file pickers.
   - **WebDAV Sync**: Seamlessly sync your data with your private cloud (Nextcloud, Nutstore, etc.) using a robust single-file sync approach with custom path support.
 - **Privacy & Security**:
-  - **Security Architecture**: Detailed [security implementation and authentication strategies](./docs/auth.md).
-  - **Performance Design**: Detailed [high-frequency UI update optimizations](./docs/perf.md).
+  - **Security Architecture**: Detailed [security implementation and authentication strategies](https://jiacai2050.github.io/flauth/auth).
+  - **Performance Design**: Detailed [high-frequency UI update optimizations](https://jiacai2050.github.io/flauth/perf).
   - **Encrypted Storage**: Secrets are encrypted and stored in the device's secure element (Keychain on iOS/macOS, Keystore on Android).
   - **Granular Storage**: Implements "One Key Per Account" architecture for maximum reliability and scalability.
 - **Modern UI**: Focused on simplicity. Built with Material 3, supporting adaptive light and dark modes.
@@ -39,8 +37,8 @@ It provides a simple and lightweight solution for managing your 2FA (Two-Factor 
 
 Migrating to Flauth is easy thanks to its support for standard `otpauth://` URIs:
 
-- **[Importing from Aegis](./docs/import_aegis.md)**: A step-by-step guide to migrate all your accounts from Aegis Authenticator.
-- **Manual Migration**: For other apps, export your accounts as a **plain text list of `otpauth://` URIs** (one per line). Save this file with a `.flauth` extension, then use the **Local File** import feature. If you have plain secret keys, you can use our **[TOTP URI Generator](https://jiacai2050.github.io/flauth/tools/uri-generator/)** to create the QR codes or URI lists.
+- **[Importing from Aegis](https://jiacai2050.github.io/flauth/import_aegis)**: A step-by-step guide to migrate all your accounts from Aegis Authenticator.
+- **Manual Migration**: For other apps, export your accounts as a **plain text list of `otpauth://` URIs** (one per line). Save this file with a `.flauth` extension, then use the **Local File** import feature. If you have plain secret keys, you can use our **[TOTP URI Generator](https://jiacai2050.github.io/flauth/tools/uri-generator)** to create the QR codes or URI lists.
   ```text
   otpauth://totp/GitHub:user?secret=ABC...&issuer=GitHub
   otpauth://totp/Google:user@gmail.com?secret=XYZ...&issuer=Google
@@ -61,6 +59,41 @@ You can download Flauth from the following sources:
 
 ### ⚡️ For Users in China (Download Acceleration)
 If you encounter slow download speeds from GitHub, you can use the [gh-proxy](https://gh-proxy.com/) service to accelerate the download.
+
+## ⌨️ CLI
+
+For a lightweight experience, Flauth also provides a command-line tool to view TOTP tokens directly in your terminal — no GUI needed.
+
+Pre-compiled binaries for Linux, macOS, and Windows are available on the [GitHub Releases](https://github.com/jiacai2050/flauth/releases) page.
+
+### Quick Install
+
+```bash
+curl -fsSL https://jiacai2050.github.io/flauth/install.sh | sh
+```
+
+For users in China:
+```bash
+curl -fsSL https://jiacai2050.github.io/flauth/install.sh | sh -s -- --china
+```
+
+Run `install.sh --help` for more options (e.g. `--version`, `--prefix`).
+
+### Usage
+
+```bash
+# Set the backup file path
+export FLAUTH_BACKUP_FILE=/path/to/backup.flauth
+
+# Show all tokens
+flauth-cli
+
+# Filter by keyword
+flauth-cli github
+
+# Show help
+flauth-cli --help
+```
 
 ## 🛠️ Development
 
@@ -107,7 +140,7 @@ flutter test           # Run unit tests
 ```
 
 ### 🔑 Android Signing
-For details on how to configure app signing for production, see the [Android Signing Guide](docs/android-sign.md).
+For details on how to configure app signing for production, see the [Android Signing Guide](https://jiacai2050.github.io/flauth/android-sign).
 
 ## 🏗️ Platform Specifics
 

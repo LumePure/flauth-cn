@@ -305,7 +305,7 @@ class _ImportExportScreenState extends State<ImportExportScreen>
   Future<Map<String, String>?> _getWebDavConfig() async {
     final provider = Provider.of<AccountProvider>(context, listen: false);
     final config = await provider.getWebDavConfig();
-    if (config == null || config['url'] == null) {
+    if (config == null || (config['url']?.isEmpty ?? true)) {
       _showSnackBar(AppLocalizations.of(context)!.pleaseConfigureWebdav);
       _openWebDavConfig();
       return null;
@@ -580,7 +580,6 @@ class _ImportExportScreenState extends State<ImportExportScreen>
             ),
 
             const SizedBox(height: 16),
-
             OutlinedButton.icon(
               onPressed: btn2Action,
               icon: Icon(btn2Icon),
