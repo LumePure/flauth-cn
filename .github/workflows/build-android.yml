@@ -27,9 +27,16 @@ jobs:
         run: flutter gen-l10n
 
       - name: Setup Android Signing
+        env:
+          ANDROID_KEY_PROPERTIES: ${{ secrets.ANDROID_KEY_PROPERTIES }}
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
         run: |
-          echo "${{ secrets.ANDROID_KEY_PROPERTIES }}" > android/key.properties
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
+          if [ -n "$ANDROID_KEY_PROPERTIES" ]; then
+            echo "$ANDROID_KEY_PROPERTIES" > android/key.properties
+            echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
+          else
+            echo "Signing secrets not available, will use debug signing"
+          fi
 
       - name: Build APK (arm64-v8a)
         run: |
